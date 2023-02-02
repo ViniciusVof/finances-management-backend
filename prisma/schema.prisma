@@ -16,9 +16,10 @@ model User {
   email      String       @unique
   password   String
   categories Categories[]
-  createdAt  DateTime     @default(now())
-  updatedAt  DateTime     @updatedAt
   Accounts   Accounts[]
+  createdAt  DateTime     @default(now())
+  updatedAt  DateTime     @default(now()) @updatedAt
+  Entries    Entries[]
 }
 
 model Categories {
@@ -28,7 +29,7 @@ model Categories {
   user          User            @relation(fields: [userId], references: [id])
   userId        String
   createdAt     DateTime        @default(now())
-  updatedAt     DateTime        @updatedAt
+  updatedAt     DateTime        @default(now()) @updatedAt
 }
 
 model SubCategories {
@@ -37,7 +38,7 @@ model SubCategories {
   categories   Categories @relation(fields: [categoriesId], references: [id])
   categoriesId String
   createdAt    DateTime   @default(now())
-  updatedAt    DateTime   @updatedAt
+  updatedAt    DateTime   @default(now()) @updatedAt
 }
 
 model Accounts {
@@ -48,10 +49,39 @@ model Accounts {
   bankAccount    String
   typeAccount    TypeAccounts @relation(fields: [typeAccountsId], references: [id])
   typeAccountsId String
+  createdAt      DateTime     @default(now())
+  updatedAt      DateTime     @default(now()) @updatedAt
+  Entries        Entries[]
 }
 
 model TypeAccounts {
-  id       String     @id @default(uuid())
-  title    String
-  Accounts Accounts[]
+  id        String     @id @default(uuid())
+  title     String
+  Accounts  Accounts[]
+  createdAt DateTime   @default(now())
+  updatedAt DateTime   @default(now()) @updatedAt
+}
+
+model Entries {
+  id         String      @id @default(uuid())
+  user       User        @relation(fields: [userId], references: [id])
+  userId     String
+  accounts   Accounts    @relation(fields: [accountsId], references: [id])
+  accountsId String
+  title      String
+  amount     Decimal
+  type       TypeEntries @relation(fields: [typeId], references: [id])
+  typeId     String
+  realize    Boolean     @default(false)
+  dueDate    DateTime
+  createdAt  DateTime    @default(now())
+  updatedAt  DateTime    @default(now()) @updatedAt
+}
+
+model TypeEntries {
+  id        String    @id @default(uuid())
+  title     String
+  Entries   Entries[]
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @default(now()) @updatedAt
 }
