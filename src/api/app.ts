@@ -1,10 +1,18 @@
 import express from 'express';
-import routes from './routes';
+import cors from 'cors';
+import customParseFormat from 'dayjs/plugin/customParseFormat';
+import dayjs from 'dayjs';
+
+import 'dayjs/locale/pt-br';
 
 import errorMiddleware from '../middlewares/error';
+import routes from './routes';
 
 const app = express();
 
-app.use(express.json()).use(routes).use(errorMiddleware);
+dayjs.locale('pt-br');
+dayjs.extend(customParseFormat);
+
+app.use(express.json()).use(cors()).use(routes).use(errorMiddleware);
 
 export default app;

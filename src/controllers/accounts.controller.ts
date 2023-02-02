@@ -1,21 +1,33 @@
 import { NextFunction, Request, Response } from 'express';
 import { StatusCodes } from 'http-status-codes';
 import prisma from '../lib/prisma';
+import { getBalanceEntries } from '../utils/getBalanceEntries';
 
 class AccountsController {
   async findAll(req: Request, res: Response, next: NextFunction) {
+    const { userId } = req.body;
     const accounts = await prisma.accounts.findMany({
-      select: {
-        bankAccount: true,
-        initialBalance: true,
-        typeAccount: {
-          select: {
-            title: true,
-          },
-        },
+      where: {
+        userId: userId,
+      },
+      include: {
+        typeAccount: true,
+        Entries: true,
       },
     });
-    res.status(StatusCodes.OK).json(accounts);
+    const result = accounts.map(account => {
+      return {
+        id: account.id,
+        initialBalance: account.initialBalance,
+        bankAccount: account.bankAccount,
+        type: account.typeAccount.title,
+        amount: getBalanceEntries(
+          account.Entries,
+          Number(account.initialBalance)
+        ),
+      };
+    });
+    res.status(StatusCodes.OK).json(result);
   }
   async create(req: Request, res: Response, next: NextFunction) {
     const { userId, initialBalance, bankAccount, typeAccountsId } = req.body;

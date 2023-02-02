@@ -5,6 +5,8 @@ import categoriesRouter from '../routers/categories.router';
 import subCategoriesRouter from '../routers/subcategories.router';
 import accountsRouter from '../routers/accounts.router';
 import typeAccountsRouter from '../routers/typeAccounts.router';
+import typeEntriesRouter from '../routers/typeEntries.router';
+import entriesRouter from '../routers/entries.router';
 
 const router = Router();
 
@@ -14,5 +16,7 @@ router.use('/categories', categoriesRouter);
 router.use('/subcategories', subCategoriesRouter);
 router.use('/accounts', accountsRouter);
 router.use('/typeAccounts', typeAccountsRouter);
+router.use('/typeEntries', typeEntriesRouter);
+router.use('/entries', entriesRouter);
 
 export default router;

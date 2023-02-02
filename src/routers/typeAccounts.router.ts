@@ -3,14 +3,14 @@ import rescue from 'express-rescue';
 import typeAccountsController from '../controllers/typeAccounts.controller';
 import authMiddleware from '../middlewares/auth';
 
-const accountsRouter = Router();
+const typeAccountsRouter = Router();
 
-accountsRouter
+typeAccountsRouter
   .route('/')
   .post(authMiddleware, rescue(typeAccountsController.create));
 
-accountsRouter
+typeAccountsRouter
   .route('/')
   .get(authMiddleware, rescue(typeAccountsController.findAll));
 
-export default accountsRouter;
+export default typeAccountsRouter;

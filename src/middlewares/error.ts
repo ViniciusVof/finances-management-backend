@@ -11,5 +11,5 @@ export default (
 
   return res
     .status(StatusCodes.INTERNAL_SERVER_ERROR)
-    .json({ message: 'Internal server error' });
+    .json({ message: 'Internal server error', err: err.message });
 };
