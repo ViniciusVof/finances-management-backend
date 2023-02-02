@@ -4,8 +4,8 @@ import prisma from '../lib/prisma';
 
 class SubCategoryController {
   async findAll(req: Request, res: Response, next: NextFunction) {
-    const categories = await prisma.categories.findMany();
-    res.status(StatusCodes.OK).json(categories);
+    const subCategories = await prisma.subCategories.findMany();
+    res.status(StatusCodes.OK).json(subCategories);
   }
   async create(req: Request, res: Response, next: NextFunction) {
     const { title, categoriesId } = req.body;
