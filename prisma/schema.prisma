@@ -18,6 +18,7 @@ model User {
   categories Categories[]
   createdAt  DateTime     @default(now())
   updatedAt  DateTime     @updatedAt
+  Accounts   Accounts[]
 }
 
 model Categories {
@@ -37,4 +38,20 @@ model SubCategories {
   categoriesId String
   createdAt    DateTime   @default(now())
   updatedAt    DateTime   @updatedAt
+}
+
+model Accounts {
+  id             String       @id @default(uuid())
+  user           User         @relation(fields: [userId], references: [id])
+  userId         String
+  initialBalance Decimal      @default(0.00)
+  bankAccount    String
+  typeAccount    TypeAccounts @relation(fields: [typeAccountsId], references: [id])
+  typeAccountsId String
+}
+
+model TypeAccounts {
+  id       String     @id @default(uuid())
+  title    String
+  Accounts Accounts[]
 }
