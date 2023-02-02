@@ -5,7 +5,7 @@ import prisma from '../lib/prisma';
 
 const saltRounds = 15;
 class UserController {
-  async listAll(req: Request, res: Response, next: NextFunction) {
+  async findAll(req: Request, res: Response, next: NextFunction) {
     const user = await prisma.user.findMany();
     res.status(StatusCodes.OK).json(user);
   }
@@ -54,6 +54,7 @@ class UserController {
       });
     }
     res.status(StatusCodes.OK).json({
+      id: user.id,
       fullname: user.fullname,
       email: user.email,
     });

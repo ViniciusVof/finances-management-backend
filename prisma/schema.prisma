@@ -11,10 +11,30 @@ datasource db {
 }
 
 model User {
-  id        String   @id @default(uuid())
-  fullname  String
-  email     String   @unique
-  password  String
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  id         String       @id @default(uuid())
+  fullname   String
+  email      String       @unique
+  password   String
+  categories Categories[]
+  createdAt  DateTime     @default(now())
+  updatedAt  DateTime     @updatedAt
+}
+
+model Categories {
+  id            String          @id @default(uuid())
+  title         String
+  subcategories SubCategories[]
+  user          User            @relation(fields: [userId], references: [id])
+  userId        String
+  createdAt     DateTime        @default(now())
+  updatedAt     DateTime        @updatedAt
+}
+
+model SubCategories {
+  id           String     @id @default(uuid())
+  title        String
+  categories   Categories @relation(fields: [categoriesId], references: [id])
+  categoriesId String
+  createdAt    DateTime   @default(now())
+  updatedAt    DateTime   @updatedAt
 }
