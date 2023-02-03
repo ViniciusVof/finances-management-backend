@@ -1,14 +1,4 @@
-interface IEntries {
-  id: string;
-  title: string;
-  bankAccount: string;
-  amount: number;
-  typeId: string;
-  realize: boolean;
-  dueDate: Date;
-}
-
-export function getBalanceEntries(data: IEntries[], initialBalance = 0) {
+export function getBalanceEntries(data: any[], initialBalance = 0) {
   const negativeBalance = data
     .filter(
       (item: { typeId: string }) => item.typeId === process.env.EXPENSE_ID
@@ -26,5 +16,16 @@ export function getBalanceEntries(data: IEntries[], initialBalance = 0) {
       0
     );
   const balance = initialBalance + positiveBalance - negativeBalance;
+  return balance.toFixed(2);
+}
+
+export function getBalanceForAccounts(data: any[]) {
+  console.log(data);
+  const balance = data.reduce(
+    (total: number, item: { amountBalance: number }) =>
+      (total += Number(item.amountBalance)),
+    0
+  );
+
   return balance.toFixed(2);
 }

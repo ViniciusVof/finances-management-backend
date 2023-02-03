@@ -1,7 +1,7 @@
 import { NextFunction, Request, Response } from 'express';
 import { StatusCodes } from 'http-status-codes';
 import prisma from '../lib/prisma';
-import { getBalanceEntries } from '../utils/getBalanceEntries';
+import { getBalanceEntries } from '../utils/getBalance';
 
 class AccountsController {
   async findAll(req: Request, res: Response, next: NextFunction) {
@@ -20,8 +20,8 @@ class AccountsController {
         id: account.id,
         initialBalance: account.initialBalance,
         bankAccount: account.bankAccount,
-        type: account.typeAccount.title,
-        amount: getBalanceEntries(
+        typeAccount: account.typeAccount.title,
+        amountBalance: getBalanceEntries(
           account.Entries,
           Number(account.initialBalance)
         ),

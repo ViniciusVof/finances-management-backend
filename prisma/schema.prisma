@@ -16,7 +16,7 @@ model User {
   email      String       @unique
   password   String
   categories Categories[]
-  Accounts   Accounts[]
+  accounts   Accounts[]
   Entries    Entries[]
   createdAt  DateTime     @default(now())
   updatedAt  DateTime     @default(now()) @updatedAt
@@ -28,8 +28,8 @@ model Categories {
   user          User            @relation(fields: [userId], references: [id])
   userId        String
   subcategories SubCategories[]
-  type          TypeEntries     @relation(fields: [typeId], references: [id])
-  typeId        String
+  type          TypeEntries?    @relation(fields: [typeId], references: [id])
+  typeId        String?
   createdAt     DateTime        @default(now())
   updatedAt     DateTime        @default(now()) @updatedAt
 }
@@ -59,7 +59,7 @@ model Accounts {
 model TypeAccounts {
   id        String     @id @default(uuid())
   title     String
-  Accounts  Accounts[]
+  accounts  Accounts[]
   createdAt DateTime   @default(now())
   updatedAt DateTime   @default(now()) @updatedAt
 }

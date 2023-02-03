@@ -11,16 +11,26 @@ class CategoryController {
       },
       include: {
         subcategories: true,
+        type: true,
       },
     });
     res.status(StatusCodes.OK).json(categories);
   }
   async create(req: Request, res: Response, next: NextFunction) {
     const { title, userId } = req.body;
+    const typeEntries = {
+      income: process.env.INCOME_ID || '5745c1c0-053e-4d51-941e-66c7c7bc24f3',
+      expense: process.env.EXPENSE_ID || 'e657d9ae-b456-4e7c-a520-08f70a96de6f',
+    };
+
+    type TTypeEntrie = keyof typeof typeEntries;
+    const type: TTypeEntrie = req.body.type;
+
     const category = await prisma.categories.create({
       data: {
         title,
         userId,
+        typeId: typeEntries[type],
       },
     });
     if (!category) {
@@ -32,6 +42,7 @@ class CategoryController {
     res.status(StatusCodes.OK).json({
       id: category.id,
       title: category.title,
+      typeId: category.typeId,
     });
   }
 }
