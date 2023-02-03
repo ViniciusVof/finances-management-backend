@@ -8,5 +8,8 @@ const entriesRouter = Router();
 entriesRouter.route('/').post(authMiddleware, rescue(entriesController.create));
 
 entriesRouter.route('/').get(authMiddleware, rescue(entriesController.findAll));
+entriesRouter
+  .route('/:type')
+  .get(authMiddleware, rescue(entriesController.findAll));
 
 export default entriesRouter;
