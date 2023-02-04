@@ -4,7 +4,15 @@ import prisma from '../lib/prisma';
 
 class TypeEntriesController {
   async findAll(req: Request, res: Response, next: NextFunction) {
-    const typeEntries = await prisma.typeEntries.findMany();
+    const typeEntries = await prisma.typeEntries.findMany({
+      include: {
+        Categories: {
+          include: {
+            subcategories: true,
+          },
+        },
+      },
+    });
     res.status(StatusCodes.OK).json(typeEntries);
   }
   async create(req: Request, res: Response, next: NextFunction) {
