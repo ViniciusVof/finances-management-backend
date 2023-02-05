@@ -43,7 +43,16 @@ class EntriesController {
     res.status(StatusCodes.OK).json(result);
   }
   async create(req: Request, res: Response, next: NextFunction) {
-    const { userId, accountsId, title, amount, realize, dueDate } = req.body;
+    const {
+      userId,
+      accountsId,
+      categoriesId,
+      subCategoriesId,
+      title,
+      amount,
+      realize,
+      dueDate,
+    } = req.body;
     const typeEntries = {
       income: process.env.INCOME_ID || '5745c1c0-053e-4d51-941e-66c7c7bc24f3',
       expense: process.env.EXPENSE_ID || 'e657d9ae-b456-4e7c-a520-08f70a96de6f',
@@ -56,6 +65,8 @@ class EntriesController {
       data: {
         userId,
         accountsId,
+        categoriesId,
+        subCategoriesId,
         title,
         amount,
         typeId: typeEntries[type],

@@ -32,6 +32,7 @@ model Categories {
   typeId        String?
   createdAt     DateTime        @default(now())
   updatedAt     DateTime        @default(now()) @updatedAt
+  Entries       Entries[]
 }
 
 model SubCategories {
@@ -41,6 +42,7 @@ model SubCategories {
   categoriesId String
   createdAt    DateTime   @default(now())
   updatedAt    DateTime   @default(now()) @updatedAt
+  Entries      Entries[]
 }
 
 model Accounts {
@@ -65,19 +67,23 @@ model TypeAccounts {
 }
 
 model Entries {
-  id         String      @id @default(uuid())
-  title      String
-  amount     Decimal
-  type       TypeEntries @relation(fields: [typeId], references: [id])
-  typeId     String
-  realize    Boolean     @default(false)
-  dueDate    DateTime
-  createdAt  DateTime    @default(now())
-  updatedAt  DateTime    @default(now()) @updatedAt
-  User       User        @relation(fields: [userId], references: [id])
-  userId     String
-  accounts   Accounts    @relation(fields: [accountsId], references: [id])
-  accountsId String
+  id              String         @id @default(uuid())
+  title           String
+  amount          Decimal
+  type            TypeEntries    @relation(fields: [typeId], references: [id])
+  typeId          String
+  realize         Boolean        @default(false)
+  dueDate         DateTime
+  createdAt       DateTime       @default(now())
+  updatedAt       DateTime       @default(now()) @updatedAt
+  User            User           @relation(fields: [userId], references: [id])
+  userId          String
+  accounts        Accounts       @relation(fields: [accountsId], references: [id])
+  accountsId      String
+  categories      Categories     @relation(fields: [categoriesId], references: [id])
+  categoriesId    String
+  subCategories   SubCategories? @relation(fields: [subCategoriesId], references: [id])
+  subCategoriesId String?
 }
 
 model TypeEntries {

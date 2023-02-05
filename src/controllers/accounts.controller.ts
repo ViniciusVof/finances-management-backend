@@ -21,6 +21,7 @@ class AccountsController {
         initialBalance: account.initialBalance,
         bankAccount: account.bankAccount,
         typeAccount: account.typeAccount.title,
+        fullBankAccount: `${account.bankAccount} (${account.typeAccount.title})`,
         amountBalance: getBalanceEntries(
           account.Entries,
           Number(account.initialBalance)
