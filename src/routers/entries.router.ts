@@ -11,5 +11,7 @@ entriesRouter.route('/').get(authMiddleware, rescue(entriesController.findAll));
 entriesRouter
   .route('/:type')
   .get(authMiddleware, rescue(entriesController.findAll));
-
+entriesRouter
+  .route('/realizeEntries')
+  .patch(authMiddleware, rescue(entriesController.realizeEntries));
 export default entriesRouter;

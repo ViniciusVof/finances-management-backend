@@ -82,6 +82,28 @@ class EntriesController {
     }
     res.status(StatusCodes.OK).json(entries);
   }
+  async realizeEntries(req: Request, res: Response, next: NextFunction) {
+    const { id, realize, dueDate } = req.body;
+    const today = dayjs().format('DD/MM/YYYY');
+    const entries = await prisma.entries.update({
+      where: {
+        id,
+      },
+      data: {
+        realize,
+        dueDate: realize
+          ? dayjs(today, 'DD/MM/YYYY').format()
+          : dayjs(dueDate, 'MM/DD/YYYY').format(),
+      },
+    });
+    if (!entries) {
+      return next({
+        status: StatusCodes.BAD_REQUEST,
+        message: 'Não foi possível alterar o status do lançamento',
+      });
+    }
+    res.status(StatusCodes.OK).json(entries);
+  }
 }
 
 export default new EntriesController();
