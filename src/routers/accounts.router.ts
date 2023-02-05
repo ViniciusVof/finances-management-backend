@@ -12,5 +12,8 @@ accountsRouter
 accountsRouter
   .route('/')
   .get(authMiddleware, rescue(accountsController.findAll));
+accountsRouter
+  .route('/')
+  .put(authMiddleware, rescue(accountsController.updateAccount));
 
 export default accountsRouter;

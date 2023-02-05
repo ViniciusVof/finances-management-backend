@@ -21,6 +21,7 @@ class AccountsController {
         initialBalance: account.initialBalance,
         bankAccount: account.bankAccount,
         typeAccount: account.typeAccount.title,
+        typeAccountsId: account.typeAccount.id,
         fullBankAccount: `${account.bankAccount} (${account.typeAccount.title})`,
         amountBalance: getBalanceEntries(
           account.Entries,
@@ -52,6 +53,27 @@ class AccountsController {
       typeAccountsId: account.typeAccountsId,
       initialBalance: account.initialBalance,
     });
+  }
+
+  async updateAccount(req: Request, res: Response, next: NextFunction) {
+    const { id, bankAccount, typeAccountsId, initialBalance } = req.body;
+    const entries = await prisma.accounts.update({
+      where: {
+        id,
+      },
+      data: {
+        initialBalance,
+        bankAccount,
+        typeAccountsId,
+      },
+    });
+    if (!entries) {
+      return next({
+        status: StatusCodes.BAD_REQUEST,
+        message: 'Não foi possível alterar a conta bancária',
+      });
+    }
+    res.status(StatusCodes.OK).json(entries);
   }
 }
 
