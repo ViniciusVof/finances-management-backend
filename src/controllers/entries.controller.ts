@@ -93,7 +93,7 @@ class EntriesController {
         realize,
         dueDate: realize
           ? dayjs(today, 'DD/MM/YYYY').format()
-          : dayjs(dueDate, 'MM/DD/YYYY').format(),
+          : dayjs(dueDate, 'DD/MM/YYYY').format(),
       },
     });
     if (!entries) {
