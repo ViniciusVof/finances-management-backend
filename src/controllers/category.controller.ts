@@ -19,8 +19,8 @@ class CategoryController {
   async create(req: Request, res: Response, next: NextFunction) {
     const { title, userId } = req.body;
     const typeEntries = {
-      income: process.env.INCOME_ID || '5745c1c0-053e-4d51-941e-66c7c7bc24f3',
-      expense: process.env.EXPENSE_ID || 'e657d9ae-b456-4e7c-a520-08f70a96de6f',
+      income: process.env.INCOME_ID || 'f3466313-b796-42ed-b65b-27edac534468',
+      expense: process.env.EXPENSE_ID || 'c708a3e7-c05b-4645-8c49-6161fd1f88be',
     };
 
     type TTypeEntrie = keyof typeof typeEntries;

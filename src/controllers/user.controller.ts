@@ -2,6 +2,7 @@ import { NextFunction, Request, Response } from 'express';
 import { StatusCodes } from 'http-status-codes';
 import bcrypt from 'bcryptjs';
 import prisma from '../lib/prisma';
+import { getInitialCategories } from '../data/categories';
 
 const saltRounds = 15;
 class UserController {
@@ -24,10 +25,34 @@ class UserController {
           password: cryptedPassword,
         },
       });
+
+      const accounts = prisma.accounts.create({
+        data: {
+          userId: newUser.id,
+          initialBalance: '0',
+          bankAccount: 'Conta inicial',
+          typeAccountsId:
+            process.env.DEFAULT_TYPE_ACCOUNTS_ID ||
+            '488f33a1-f3f9-4534-b6fc-651aa6643e1d',
+        },
+      });
+
+      const categories = prisma.categories.createMany({
+        data: getInitialCategories(newUser.id),
+      });
+
       if (!newUser) {
         return next({
           status: StatusCodes.BAD_REQUEST,
           message: 'Não foi possível cadastrar um novo usuário',
+        });
+      }
+      const transaction = await prisma.$transaction([accounts, categories]);
+
+      if (!transaction) {
+        return next({
+          status: StatusCodes.BAD_REQUEST,
+          message: 'Não foi possível cadastrar novos dados para o usuário',
         });
       }
       res.status(StatusCodes.OK).json({

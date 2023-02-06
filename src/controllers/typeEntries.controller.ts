@@ -4,9 +4,13 @@ import prisma from '../lib/prisma';
 
 class TypeEntriesController {
   async findAll(req: Request, res: Response, next: NextFunction) {
+    const { userId } = req.body;
     const typeEntries = await prisma.typeEntries.findMany({
       include: {
         Categories: {
+          where: {
+            userId,
+          },
           include: {
             subcategories: true,
           },
