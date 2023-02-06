@@ -14,4 +14,7 @@ entriesRouter
 entriesRouter
   .route('/realizeEntries')
   .patch(authMiddleware, rescue(entriesController.realizeEntries));
+entriesRouter
+  .route('/')
+  .put(authMiddleware, rescue(entriesController.updateEntries));
 export default entriesRouter;

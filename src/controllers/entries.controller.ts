@@ -37,6 +37,9 @@ class EntriesController {
         amount: entrie.amount,
         type: entrie.type.id,
         realize: entrie.realize,
+        categoriesId: entrie.categoriesId,
+        accountsId: entrie.accountsId,
+        subcategoriesId: entrie.subCategoriesId,
         dueDate: dayjs(entrie.dueDate).format('DD/MM/YYYY'),
       };
     });
@@ -100,6 +103,40 @@ class EntriesController {
       return next({
         status: StatusCodes.BAD_REQUEST,
         message: 'Não foi possível alterar o status do lançamento',
+      });
+    }
+    res.status(StatusCodes.OK).json(entries);
+  }
+  async updateEntries(req: Request, res: Response, next: NextFunction) {
+    const {
+      id,
+      accountsId,
+      categoriesId,
+      subCategoriesId,
+      title,
+      amount,
+      realize,
+      dueDate,
+    } = req.body;
+    const today = dayjs().format('DD/MM/YYYY');
+    const entries = await prisma.entries.update({
+      where: {
+        id,
+      },
+      data: {
+        realize,
+        accountsId,
+        categoriesId,
+        subCategoriesId,
+        title,
+        amount,
+        dueDate: dayjs(dueDate, 'DD/MM/YYYY').format(),
+      },
+    });
+    if (!entries) {
+      return next({
+        status: StatusCodes.BAD_REQUEST,
+        message: 'Não foi possível atualizar o lançamento',
       });
     }
     res.status(StatusCodes.OK).json(entries);
