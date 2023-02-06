@@ -15,5 +15,8 @@ accountsRouter
 accountsRouter
   .route('/')
   .put(authMiddleware, rescue(accountsController.updateAccount));
+accountsRouter
+  .route('/:id/:accountsId')
+  .delete(authMiddleware, rescue(accountsController.deleteAccounts));
 
 export default accountsRouter;

@@ -57,7 +57,7 @@ class AccountsController {
 
   async updateAccount(req: Request, res: Response, next: NextFunction) {
     const { id, bankAccount, typeAccountsId, initialBalance } = req.body;
-    const entries = await prisma.accounts.update({
+    const account = await prisma.accounts.update({
       where: {
         id,
       },
@@ -67,13 +67,44 @@ class AccountsController {
         typeAccountsId,
       },
     });
-    if (!entries) {
+    if (!account) {
       return next({
         status: StatusCodes.BAD_REQUEST,
         message: 'Não foi possível alterar a conta bancária',
       });
     }
-    res.status(StatusCodes.OK).json(entries);
+    res.status(StatusCodes.OK).json(account);
+  }
+
+  async deleteAccounts(req: Request, res: Response, next: NextFunction) {
+    const { id, accountsId } = req.params;
+    const updateEntries = prisma.entries.updateMany({
+      where: {
+        accountsId: id,
+      },
+      data: {
+        accountsId,
+      },
+    });
+    const deleteAccount = prisma.accounts.delete({
+      where: {
+        id,
+      },
+    });
+
+    const transaction = await prisma.$transaction([
+      updateEntries,
+      deleteAccount,
+    ]);
+
+    if (!transaction) {
+      return next({
+        status: StatusCodes.BAD_REQUEST,
+        message: 'Não foi possível deletar a conta',
+      });
+    }
+
+    res.status(StatusCodes.OK).json({ message: 'Conta bancária excluída' });
   }
 }
 

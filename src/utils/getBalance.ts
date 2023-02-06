@@ -35,7 +35,6 @@ export function getBalanceEntries(data: any[], initialBalance = 0) {
 }
 
 export function getBalanceForAccounts(data: any[]) {
-  console.log(data);
   const balance = data.reduce(
     (total: number, item: { amountBalance: number }) =>
       (total += Number(item.amountBalance)),
