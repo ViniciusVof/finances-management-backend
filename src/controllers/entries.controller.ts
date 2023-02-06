@@ -141,6 +141,23 @@ class EntriesController {
     }
     res.status(StatusCodes.OK).json(entries);
   }
+
+  async deleteEntries(req: Request, res: Response, next: NextFunction) {
+    const { id } = req.params;
+    const deleteEntrie = await prisma.entries.delete({
+      where: {
+        id,
+      },
+    });
+
+    if (!deleteEntrie) {
+      return next({
+        status: StatusCodes.BAD_REQUEST,
+        message: 'Não foi possível atualizar o lançamento',
+      });
+    }
+    res.status(StatusCodes.OK).json({ message: 'Lançamento excluído' });
+  }
 }
 
 export default new EntriesController();

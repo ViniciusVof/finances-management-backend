@@ -17,4 +17,7 @@ entriesRouter
 entriesRouter
   .route('/')
   .put(authMiddleware, rescue(entriesController.updateEntries));
+entriesRouter
+  .route('/:id')
+  .delete(authMiddleware, rescue(entriesController.deleteEntries));
 export default entriesRouter;
