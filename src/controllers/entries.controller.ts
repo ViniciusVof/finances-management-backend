@@ -39,7 +39,7 @@ class EntriesController {
         realize: entrie.realize,
         categoriesId: entrie.categoriesId,
         accountsId: entrie.accountsId,
-        subcategoriesId: entrie.subCategoriesId,
+        subCategoriesId: entrie.subCategoriesId,
         dueDate: dayjs(entrie.dueDate).format('DD/MM/YYYY'),
       };
     });
