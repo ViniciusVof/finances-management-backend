@@ -45,6 +45,38 @@ class CategoryController {
       typeId: category.typeId,
     });
   }
+  async updateCategory(req: Request, res: Response, next: NextFunction) {
+    const { id, title, userId } = req.body;
+    const typeEntries = {
+      income: process.env.INCOME_ID || 'f3466313-b796-42ed-b65b-27edac534468',
+      expense: process.env.EXPENSE_ID || 'c708a3e7-c05b-4645-8c49-6161fd1f88be',
+    };
+
+    type TTypeEntrie = keyof typeof typeEntries;
+    const type: TTypeEntrie = req.body.type;
+
+    const category = await prisma.categories.update({
+      where: {
+        id,
+      },
+      data: {
+        title,
+        userId,
+        typeId: typeEntries[type],
+      },
+    });
+    if (!category) {
+      return next({
+        status: StatusCodes.BAD_REQUEST,
+        message: 'Não foi possível editar esta categoria',
+      });
+    }
+    res.status(StatusCodes.OK).json({
+      id: category.id,
+      title: category.title,
+      typeId: category.typeId,
+    });
+  }
 }
 
 export default new CategoryController();

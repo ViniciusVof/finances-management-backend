@@ -13,6 +13,7 @@ class TypeEntriesController {
           },
           include: {
             subcategories: true,
+            type: true,
           },
         },
       },

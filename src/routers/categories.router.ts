@@ -12,5 +12,8 @@ categoriesRouter
 categoriesRouter
   .route('/')
   .get(authMiddleware, rescue(categoryController.findAll));
+categoriesRouter
+  .route('/')
+  .put(authMiddleware, rescue(categoryController.updateCategory));
 
 export default categoriesRouter;
