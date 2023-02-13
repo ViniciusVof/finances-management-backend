@@ -84,6 +84,16 @@ model Entries {
   categoriesId    String
   subCategories   SubCategories? @relation(fields: [subCategoriesId], references: [id])
   subCategoriesId String?
+  recurrency      Boolean?
+  recurrencyTimes Int?
+  recurrencyIndex Int?
+}
+
+model TypeRecurrencies {
+  id        String   @id @default(uuid())
+  title     String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @default(now()) @updatedAt
 }
 
 model TypeEntries {

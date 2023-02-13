@@ -6,9 +6,21 @@ import prisma from '../lib/prisma';
 interface ITypeEntries {
   [key: string]: string;
 }
-interface IInverseTypeEntries {
-  [key: string]: string;
+interface EntriesSet {
+  userId: string;
+  accountsId: string;
+  categoriesId: string;
+  subCategoriesId: string;
+  title: string;
+  amount: string;
+  typeId: string;
+  realize: boolean;
+  dueDate: string;
+  recurrency: boolean;
+  recurrencyTimes: number;
+  recurrencyIndex: number;
 }
+
 class EntriesController {
   async findAll(req: Request, res: Response, next: NextFunction) {
     const { userId } = req.body;
@@ -55,6 +67,9 @@ class EntriesController {
       amount,
       realize,
       dueDate,
+      recurrency,
+      typeRecurrency,
+      recurrencyTimes,
     } = req.body;
     const typeEntries = {
       income: process.env.INCOME_ID || '5745c1c0-053e-4d51-941e-66c7c7bc24f3',
@@ -63,27 +78,61 @@ class EntriesController {
 
     type TTypeEntrie = keyof typeof typeEntries;
     const type: TTypeEntrie = req.body.type;
-
-    const entries = await prisma.entries.create({
-      data: {
-        userId,
-        accountsId,
-        categoriesId,
-        subCategoriesId,
-        title,
-        amount,
-        typeId: typeEntries[type],
-        realize,
-        dueDate: dayjs(dueDate, 'DD/MM/YYYY').format(),
-      },
-    });
-    if (!entries) {
-      return next({
-        status: StatusCodes.BAD_REQUEST,
-        message: 'Não foi possível cadastrar esse lançamento',
+    if (recurrency === true) {
+      const recurrencyData = new Set<EntriesSet>();
+      const repeatTimes =
+        recurrencyTimes !== 0 ? recurrencyTimes : process.env.MAX_RECURRENCY;
+      for (let i = 0; i < repeatTimes; i++) {
+        const addInstallments = i;
+        recurrencyData.add({
+          userId,
+          accountsId,
+          categoriesId,
+          subCategoriesId,
+          title,
+          amount,
+          typeId: typeEntries[type],
+          realize: i === 0 ? realize : false,
+          dueDate: dayjs(dueDate, 'DD/MM/YYYY')
+            .add(addInstallments, typeRecurrency)
+            .format(),
+          recurrency,
+          recurrencyTimes,
+          recurrencyIndex: i,
+        });
+      }
+      const entries = await prisma.entries.createMany({
+        data: Array.from(recurrencyData),
       });
+      if (!entries) {
+        return next({
+          status: StatusCodes.BAD_REQUEST,
+          message: 'Não foi possível cadastrar esse lançamento',
+        });
+      }
+      res.status(StatusCodes.OK).json(entries);
+    } else {
+      const entries = await prisma.entries.create({
+        data: {
+          userId,
+          accountsId,
+          categoriesId,
+          subCategoriesId,
+          title,
+          amount,
+          typeId: typeEntries[type],
+          realize,
+          dueDate: dayjs(dueDate, 'DD/MM/YYYY').format(),
+        },
+      });
+      if (!entries) {
+        return next({
+          status: StatusCodes.BAD_REQUEST,
+          message: 'Não foi possível cadastrar esse lançamento',
+        });
+      }
+      res.status(StatusCodes.OK).json(entries);
     }
-    res.status(StatusCodes.OK).json(entries);
   }
   async realizeEntries(req: Request, res: Response, next: NextFunction) {
     const { id, realize, dueDate } = req.body;
