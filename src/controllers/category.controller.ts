@@ -91,6 +91,56 @@ class CategoryController {
       typeId: category.typeId,
     });
   }
+  async deleteCategory(req: Request, res: Response, next: NextFunction) {
+    const { id, categoriesId } = req.params;
+    const findCategory = await prisma.categories.findUnique({
+      where: {
+        id: categoriesId,
+      },
+    });
+
+    if (!findCategory) {
+      return next({
+        status: StatusCodes.BAD_REQUEST,
+        message: 'Nenhuma categoria pai encontrada.',
+      });
+    }
+    const updateEntries = prisma.entries.updateMany({
+      where: {
+        categoriesId: id,
+      },
+      data: {
+        categoriesId,
+        subCategoriesId: null,
+        typeId: findCategory?.typeId || '',
+      },
+    });
+    const deleteSubCategorys = prisma.subCategories.deleteMany({
+      where: {
+        categoriesId: id,
+      },
+    });
+    const deleteCategory = prisma.categories.delete({
+      where: {
+        id,
+      },
+    });
+
+    const transaction = await prisma.$transaction([
+      updateEntries,
+      deleteSubCategorys,
+      deleteCategory,
+    ]);
+
+    if (!transaction) {
+      return next({
+        status: StatusCodes.BAD_REQUEST,
+        message: 'Não foi possível deletar a categoria',
+      });
+    }
+
+    res.status(StatusCodes.OK).json({ message: 'Categoria excluída' });
+  }
 }
 
 export default new CategoryController();
