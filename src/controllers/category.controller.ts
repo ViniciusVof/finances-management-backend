@@ -65,12 +65,12 @@ class CategoryController {
         typeId: typeEntries[type],
       },
     });
-    const updateEntries = prisma.entries.updateMany({
+    const updateEntries = await prisma.entries.updateMany({
       where: {
         categoriesId: id,
       },
       data: {
-        typeId: '3f52c039-b12d-45df-8baf-d26b7567b8dc',
+        typeId: typeEntries[type],
       },
     });
     if (!updateEntries) {
@@ -89,7 +89,6 @@ class CategoryController {
       id: category.id,
       title: category.title,
       typeId: category.typeId,
-      entries: updateEntries,
     });
   }
 }
