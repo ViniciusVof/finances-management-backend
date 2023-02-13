@@ -12,5 +12,8 @@ subcategoriesRouter
 subcategoriesRouter
   .route('/')
   .get(authMiddleware, rescue(subCategoryController.findAll));
+subcategoriesRouter
+  .route('/')
+  .put(authMiddleware, rescue(subCategoryController.update));
 
 export default subcategoriesRouter;
