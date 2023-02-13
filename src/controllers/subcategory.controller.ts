@@ -70,7 +70,6 @@ class SubCategoryController {
         subCategoriesId: id,
       },
     });
-    console.log('Entries ?>>>>', entries);
     if (!updateEntries) {
       return next({
         status: StatusCodes.BAD_REQUEST,
@@ -78,7 +77,6 @@ class SubCategoryController {
           'Não foi possível atualizar os lançamentos desta subCategoria.',
       });
     }
-    console.log(updateEntries);
     res.status(StatusCodes.OK).json({
       id: updateSubcategory.id,
       title: updateSubcategory.title,
