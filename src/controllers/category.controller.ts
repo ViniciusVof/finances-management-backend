@@ -89,6 +89,7 @@ class CategoryController {
       id: category.id,
       title: category.title,
       typeId: category.typeId,
+      ...updateEntries,
     });
   }
 }
