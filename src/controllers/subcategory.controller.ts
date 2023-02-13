@@ -34,6 +34,7 @@ class SubCategoryController {
       },
     });
 
+    console.log(findCategory);
     if (!findCategory) {
       return next({
         status: StatusCodes.BAD_REQUEST,
@@ -57,12 +58,19 @@ class SubCategoryController {
     }
     const updateEntries = await prisma.entries.updateMany({
       where: {
-        categoriesId: id,
+        subCategoriesId: id,
       },
       data: {
+        categoriesId: categoriesId,
         typeId: findCategory?.typeId || '',
       },
     });
+    const entries = await prisma.entries.findMany({
+      where: {
+        subCategoriesId: id,
+      },
+    });
+    console.log('Entries ?>>>>', entries);
     if (!updateEntries) {
       return next({
         status: StatusCodes.BAD_REQUEST,
@@ -70,6 +78,7 @@ class SubCategoryController {
           'Não foi possível atualizar os lançamentos desta subCategoria.',
       });
     }
+    console.log(updateEntries);
     res.status(StatusCodes.OK).json({
       id: updateSubcategory.id,
       title: updateSubcategory.title,
