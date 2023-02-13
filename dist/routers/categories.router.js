@@ -1,0 +1,21 @@
+"use strict";
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+var express_1 = require("express");
+var express_rescue_1 = __importDefault(require("express-rescue"));
+var category_controller_1 = __importDefault(require("../controllers/category.controller"));
+var auth_1 = __importDefault(require("../middlewares/auth"));
+var categoriesRouter = (0, express_1.Router)();
+categoriesRouter
+    .route('/')
+    .post(auth_1.default, (0, express_rescue_1.default)(category_controller_1.default.create));
+categoriesRouter
+    .route('/')
+    .get(auth_1.default, (0, express_rescue_1.default)(category_controller_1.default.findAll));
+categoriesRouter
+    .route('/')
+    .put(auth_1.default, (0, express_rescue_1.default)(category_controller_1.default.updateCategory));
+exports.default = categoriesRouter;
+//# sourceMappingURL=categories.router.js.map

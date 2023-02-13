@@ -1,0 +1,1 @@
+{"version":3,"file":"dashboard.router.js","sourceRoot":"","sources":["../../src/routers/dashboard.router.ts"],"names":[],"mappings":";;;;;AAAA,mCAAiC;AACjC,kEAAoC;AACpC,6FAAsE;AACtE,6DAAiD;AAEjD,IAAM,UAAU,GAAG,IAAA,gBAAM,GAAE,CAAC;AAE5B,UAAU;KACP,KAAK,CAAC,GAAG,CAAC;KACV,GAAG,CAAC,cAAc,EAAE,IAAA,wBAAM,EAAC,8BAAmB,CAAC,WAAW,CAAC,CAAC,CAAC;AAEhE,kBAAe,UAAU,CAAC"}

@@ -35,7 +35,7 @@
   },
   "scripts": {
     "start": "tsx watch src/api/server.ts",
-    "build": "tsc",
+    "build": "tsx src/api/server.ts",
     "dev": "ts-node-dev --transpileOnly --ignore-watch node_modules src/api/server.ts"
   }
 }
