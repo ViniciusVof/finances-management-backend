@@ -70,7 +70,7 @@ class CategoryController {
         categoriesId: id,
       },
       data: {
-        typeId: typeEntries[type],
+        typeId: '3f52c039-b12d-45df-8baf-d26b7567b8dc',
       },
     });
     if (!updateEntries) {
