@@ -34,7 +34,6 @@ class SubCategoryController {
       },
     });
 
-    console.log(findCategory);
     if (!findCategory) {
       return next({
         status: StatusCodes.BAD_REQUEST,
@@ -65,11 +64,6 @@ class SubCategoryController {
         typeId: findCategory?.typeId || '',
       },
     });
-    const entries = await prisma.entries.findMany({
-      where: {
-        subCategoriesId: id,
-      },
-    });
     if (!updateEntries) {
       return next({
         status: StatusCodes.BAD_REQUEST,
@@ -82,6 +76,36 @@ class SubCategoryController {
       title: updateSubcategory.title,
       categoriesId: updateSubcategory.categoriesId,
     });
+  }
+  async deleteSubcategory(req: Request, res: Response, next: NextFunction) {
+    const { id } = req.params;
+
+    const updateEntries = prisma.entries.updateMany({
+      where: {
+        subCategoriesId: id,
+      },
+      data: {
+        subCategoriesId: null,
+      },
+    });
+    const deleteSubcategory = prisma.subCategories.delete({
+      where: {
+        id,
+      },
+    });
+    const transaction = await prisma.$transaction([
+      updateEntries,
+      deleteSubcategory,
+    ]);
+
+    if (!transaction) {
+      return next({
+        status: StatusCodes.BAD_REQUEST,
+        message: 'Não foi possível deletar a subcategoria',
+      });
+    }
+
+    res.status(StatusCodes.OK).json({ message: 'SubCategoria excluída' });
   }
 }
 

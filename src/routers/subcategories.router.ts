@@ -15,5 +15,8 @@ subcategoriesRouter
 subcategoriesRouter
   .route('/')
   .put(authMiddleware, rescue(subCategoryController.update));
+subcategoriesRouter
+  .route('/:id')
+  .delete(authMiddleware, rescue(subCategoryController.deleteSubcategory));
 
 export default subcategoriesRouter;
