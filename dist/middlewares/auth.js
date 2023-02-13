@@ -15,8 +15,8 @@ exports.default = (function (req, res, next) {
     try {
         var data = jwt_1.default.verify(token);
         res.locals.payload = data;
-        req.body.userId = data.id;
-        req.body.fullname = data.fullname;
+        req.body.userId = res.locals.payload.id;
+        req.body.fullname = res.locals.payload.fullname;
         return next();
     }
     catch (_a) {

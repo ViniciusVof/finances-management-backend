@@ -14,8 +14,8 @@ export default (req: Request, res: Response, next: NextFunction) => {
   try {
     const data = jwt.verify(token);
     res.locals.payload = data;
-    req.body.userId = data.id;
-    req.body.fullname = data.fullname;
+    req.body.userId = res.locals.payload.id;
+    req.body.fullname = res.locals.payload.fullname;
     return next();
   } catch {
     return next({ status: StatusCodes.UNAUTHORIZED, message: 'Unauthorized' });
