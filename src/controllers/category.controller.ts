@@ -70,7 +70,7 @@ class CategoryController {
         categoriesId: id,
       },
       data: {
-        typeId: category.typeId ?? typeEntries[type],
+        typeId: typeEntries[type],
       },
     });
     if (!updateEntries) {
@@ -89,7 +89,7 @@ class CategoryController {
       id: category.id,
       title: category.title,
       typeId: category.typeId,
-      ...updateEntries,
+      entries: updateEntries,
     });
   }
 }
