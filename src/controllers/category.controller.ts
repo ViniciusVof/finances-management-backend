@@ -65,6 +65,20 @@ class CategoryController {
         typeId: typeEntries[type],
       },
     });
+    const updateEntries = prisma.entries.updateMany({
+      where: {
+        categoriesId: id,
+      },
+      data: {
+        typeId: typeEntries[type],
+      },
+    });
+    if (!updateEntries) {
+      return next({
+        status: StatusCodes.BAD_REQUEST,
+        message: 'Não foi possível atualizar os lançamentos desta categoria',
+      });
+    }
     if (!category) {
       return next({
         status: StatusCodes.BAD_REQUEST,
