@@ -18,6 +18,6 @@ entriesRouter
   .route('/')
   .put(authMiddleware, rescue(entriesController.updateEntries));
 entriesRouter
-  .route('/:id')
+  .route('/:id/:deleteRecurrency?/:recurrencyId?/:recurrencyIndex?')
   .delete(authMiddleware, rescue(entriesController.deleteEntries));
 export default entriesRouter;
