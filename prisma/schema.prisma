@@ -87,6 +87,7 @@ model Entries {
   recurrency      Boolean?
   recurrencyTimes Int?
   recurrencyIndex Int?
+  recurrencyId    String?
 }
 
 model TypeRecurrencies {

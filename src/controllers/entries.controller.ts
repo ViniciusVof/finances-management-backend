@@ -2,6 +2,7 @@ import dayjs from 'dayjs';
 import { NextFunction, Request, Response } from 'express';
 import { StatusCodes } from 'http-status-codes';
 import prisma from '../lib/prisma';
+import { v4 as uuidv4 } from 'uuid';
 
 interface ITypeEntries {
   [key: string]: string;
@@ -19,6 +20,7 @@ interface EntriesSet {
   recurrency: boolean;
   recurrencyTimes: number;
   recurrencyIndex: number;
+  recurrencyId: string;
 }
 
 class EntriesController {
@@ -53,6 +55,10 @@ class EntriesController {
         accountsId: entrie.accountsId,
         subCategoriesId: entrie.subCategoriesId,
         dueDate: dayjs(entrie.dueDate).format('DD/MM/YYYY'),
+        recurrencyId: entrie.recurrencyId ?? false,
+        recurrency: entrie.recurrency,
+        recurrencyTimes: entrie.recurrencyTimes,
+        recurrencyIndex: entrie.recurrencyIndex,
       };
     });
     res.status(StatusCodes.OK).json(result);
@@ -79,6 +85,7 @@ class EntriesController {
     type TTypeEntrie = keyof typeof typeEntries;
     const type: TTypeEntrie = req.body.type;
     if (recurrency === true) {
+      const recurrencyId = uuidv4();
       const recurrencyData = new Set<EntriesSet>();
       const repeatTimes =
         recurrencyTimes !== 0 ? recurrencyTimes : process.env.MAX_RECURRENCY;
@@ -97,6 +104,7 @@ class EntriesController {
             .add(addInstallments, typeRecurrency)
             .format(),
           recurrency,
+          recurrencyId,
           recurrencyTimes,
           recurrencyIndex: i,
         });
@@ -192,20 +200,67 @@ class EntriesController {
   }
 
   async deleteEntries(req: Request, res: Response, next: NextFunction) {
-    const { id } = req.params;
-    const deleteEntrie = await prisma.entries.delete({
-      where: {
-        id,
-      },
-    });
-
-    if (!deleteEntrie) {
-      return next({
-        status: StatusCodes.BAD_REQUEST,
-        message: 'Não foi possível atualizar o lançamento',
+    const { id, recurrencyId, recurrencyIndex, deleteRecurrency } = req.params;
+    const index = Number(recurrencyIndex);
+    if (deleteRecurrency === 'all') {
+      const deleteEntrie = await prisma.entries.deleteMany({
+        where: {
+          recurrencyId,
+        },
       });
+      if (!deleteEntrie) {
+        return next({
+          status: StatusCodes.BAD_REQUEST,
+          message: 'Não foi possível atualizar o lançamento',
+        });
+      }
+      res.status(StatusCodes.OK).json({ message: 'Lançamento excluído' });
     }
-    res.status(StatusCodes.OK).json({ message: 'Lançamento excluído' });
+    if (deleteRecurrency === 'nexts') {
+      const deleteEntrie = await prisma.entries.deleteMany({
+        where: {
+          recurrencyId,
+          recurrencyIndex: {
+            gte: index,
+          },
+        },
+      });
+      if (!deleteEntrie) {
+        return next({
+          status: StatusCodes.BAD_REQUEST,
+          message: 'Não foi possível atualizar o lançamento',
+        });
+      }
+      res.status(StatusCodes.OK).json({ message: 'Lançamento excluído' });
+    }
+    if (deleteRecurrency === 'unique') {
+      const deleteEntrie = await prisma.entries.delete({
+        where: {
+          id,
+        },
+      });
+      if (!deleteEntrie) {
+        return next({
+          status: StatusCodes.BAD_REQUEST,
+          message: 'Não foi possível atualizar o lançamento',
+        });
+      }
+      res.status(StatusCodes.OK).json({ message: 'Lançamento excluído' });
+    }
+    if (deleteRecurrency === 'none') {
+      const deleteEntrie = await prisma.entries.delete({
+        where: {
+          id,
+        },
+      });
+      if (!deleteEntrie) {
+        return next({
+          status: StatusCodes.BAD_REQUEST,
+          message: 'Não foi possível atualizar o lançamento',
+        });
+      }
+      res.status(StatusCodes.OK).json({ message: 'Lançamento excluído' });
+    }
   }
 }
 
